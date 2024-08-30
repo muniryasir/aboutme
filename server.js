@@ -9,10 +9,16 @@ const app = express();
 const port = 3000;
 
 app.use(bodyParser.json());
-app.use('/users', userRouter);
+// app.use('/users', userRouter);
 
-mongoose.connect(process.env.MONGO_URI);
+// mongoose.connect(process.env.MONGO_URI);
 
+
+app.get('/', async (req, res) => {
+   
+    res.status(200).json({ message: 'working' });
+
+});
 
 
 app.listen(port, () => {
