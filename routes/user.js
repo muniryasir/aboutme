@@ -18,7 +18,7 @@ router.get('/:id', getUser, (req, res) => {
 });
 
 // Create a user
-router.post('/', async (req, res) => {
+router.post('/adduser', async (req, res) => {
     const user = new User({
         name: req.body.name,
         email: req.body.email,
@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
 });
 
 // Update a user
-router.patch('/:id', getUser, async (req, res) => {
+router.patch('/updateuser/:id', getUser, async (req, res) => {
     if (req.body.name != null) {
         res.user.name = req.body.name;
     }
@@ -54,7 +54,7 @@ router.patch('/:id', getUser, async (req, res) => {
 });
 
 // Delete a user
-router.delete('/:id', getUser, async (req, res) => {
+router.delete('/deleteusr/:id', getUser, async (req, res) => {
     try {
         await res.user.remove();
         res.json({ message: 'Deleted User' });
