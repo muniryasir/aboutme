@@ -2,13 +2,8 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
 
-router.get('/', async (req, res) => {
-   
-        res.status(200).json({ message: 'working' });
-    
-});
 // Get all users
-router.get('/listusers', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const users = await User.find();
         res.json(users);
@@ -23,11 +18,11 @@ router.get('/:id', getUser, (req, res) => {
 });
 
 // Create a user
-router.post('/adduser', async (req, res) => {
+router.post('/', async (req, res) => {
     const user = new User({
         name: req.body.name,
         email: req.body.email,
-        age: req.body.age
+        password: req.body.password
     });
 
     try {
@@ -46,8 +41,8 @@ router.patch('/:id', getUser, async (req, res) => {
     if (req.body.email != null) {
         res.user.email = req.body.email;
     }
-    if (req.body.age != null) {
-        res.user.age = req.body.age;
+    if (req.body.password != null) {
+        res.user.password = req.body.password;
     }
 
     try {
