@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
     
 });
 // Get all users
-router.get('/api', async (req, res) => {
+router.get('/listusers', async (req, res) => {
     try {
         const users = await User.find();
         res.json(users);
@@ -23,7 +23,7 @@ router.get('/:id', getUser, (req, res) => {
 });
 
 // Create a user
-router.post('/', async (req, res) => {
+router.post('/adduser', async (req, res) => {
     const user = new User({
         name: req.body.name,
         email: req.body.email,
