@@ -3,7 +3,13 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const userRouter = require('./routes/user');
 require('dotenv').config(); // Load environment variables
+const cors = require('cors');
 
+app.use(cors({
+    origin: 'http://localhost:3000', // Allow requests from this origin
+    methods: ['GET', 'POST'], // Allow these HTTP methods
+    credentials: true // Allow cookies to be sent
+  }));
 
 const app = express();
 const port = 3000;
