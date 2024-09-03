@@ -5,7 +5,42 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 require('dotenv').config(); // Load environment variables
 
+// userfeedbackID
 
+function generateUniqueId(length) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  }
+  
+
+router.post('/generate-id', async (req, res) => {
+    const { userId } = req.body;
+  
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
+  
+    let uniqueId;
+    let isUnique = false;
+  
+    while (!isUnique) {
+      uniqueId = generateUniqueId(8);
+      const existingFeedback = await UserFeedback.findOne({ feedbackId: uniqueId });
+      if (!existingFeedback) {
+        isUnique = true;
+      }
+    }
+  
+    const newFeedback = new UserFeedback({ feedbackId: uniqueId, userId });
+    await newFeedback.save();
+  
+    res.json({ uniqueId });
+  });
+  
 // Sign-up route
 router.post('/signup', async (req, res) => {
     const { name, email, password } = req.body;
