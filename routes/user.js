@@ -23,6 +23,16 @@ function generateUniqueId(length) {
     if (!userId) {
       return res.status(400).json({ error: 'User ID is required' });
     }
+    let uniqueId;
+    let isUnique = false;
+  
+    while (!isUnique) {
+      uniqueId = generateUniqueId(8);
+      const existingFeedback = await UserFeedback.findOne({ feedbackId: uniqueId });
+      if (!existingFeedback) {
+        isUnique = true;
+      }
+    }
     res.json({msg: "works" });
   })
 
