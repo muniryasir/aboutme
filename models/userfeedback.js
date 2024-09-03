@@ -4,5 +4,4 @@ const userFeedbackSchema = new mongoose.Schema({
     // other fields...
   });
   
-  const UserFeedback = mongoose.model('UserFeedback', userFeedbackSchema);
-  
+  module.exports = mongoose.model('UserFeedback', userFeedbackSchema);
