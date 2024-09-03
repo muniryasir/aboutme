@@ -33,7 +33,10 @@ function generateUniqueId(length) {
         isUnique = true;
       }
     }
-    res.json({msg: "works" });
+    const newFeedback = new UserFeedback({ feedbackId: uniqueId, userId });
+    await newFeedback.save();
+  
+    res.json({ uniqueId });
   })
 
 router.post('/generate-Id', async (req, res) => {
