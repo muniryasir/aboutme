@@ -16,7 +16,10 @@ function generateUniqueId(length) {
     }
     return result;
   }
-  
+
+  router.post('/generateId', async (req, res) => {
+    res.json({msg: "works" });
+  })
 
 router.post('/generate-id', async (req, res) => {
     res.header("Access-Control-Allow-Origin", "http://localhost:3000");
