@@ -18,6 +18,11 @@ function generateUniqueId(length) {
   }
 
   router.post('/generateId', async (req, res) => {
+    const { userId } = req.body;
+  
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
     res.json({msg: "works" });
   })
 
