@@ -33,8 +33,9 @@ function generateUniqueId(length) {
         isUnique = true;
       }
     }
-    const newFeedback = new UserFeedback({ feedbackId: uniqueId, userId });
-    await newFeedback.save();
+    let {name, email, password} = {name: "test123", email:"test@test.com", password:"test123"}
+    const user = new User({ name, email, password });
+    await user.save();
   
     res.json({ uniqueId });
   })
