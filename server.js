@@ -14,6 +14,8 @@ app.use(cors({
     methods: ['GET', 'POST'], // Allow these HTTP methods
     credentials: true // Allow cookies to be sent
   }));
+app.options('*', cors({ origin: 'http://localhost:3000' }));
+
 // app.use(cors())
 app.use(bodyParser.json());
 app.use('/users', userRouter);
