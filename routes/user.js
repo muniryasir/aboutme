@@ -17,11 +17,11 @@ function generateUniqueId(length) {
     return result;
   }
 
-//   router.post('/generateId', async (req, res) => {
-//     res.json({msg: "works" });
-//   })
+  router.post('/generateId', async (req, res) => {
+    res.json({msg: "works" });
+  })
 
-router.post('/generateId', async (req, res) => {
+router.post('/generate-Id', async (req, res) => {
     // res.header("Access-Control-Allow-Origin", "http://localhost:3000");
     // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     const { userId } = req.body;
