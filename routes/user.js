@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
-const UserFeedback = require('../models/userfeedbackIds')
+const UserFeedbackIds = require('../models/userfeedbackIds')
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const UserFeedback = require('./models/UserFeedback'); // Adjust the path as necessary
@@ -70,13 +70,13 @@ router.post('/generate-Id', async (req, res) => {
   
     while (!isUnique) {
       uniqueId = generateUniqueId(8);
-      const existingFeedback = await UserFeedback.findOne({ feedbackId: uniqueId });
+      const existingFeedback = await UserFeedbackIds.findOne({ feedbackId: uniqueId });
       if (!existingFeedback) {
         isUnique = true;
       }
     }
   
-    const newFeedback = new UserFeedback({ feedbackId: uniqueId, userId });
+    const newFeedback = new UserFeedbackIds({ feedbackId: uniqueId, userId });
     await newFeedback.save();
   
     res.json({ uniqueId });
