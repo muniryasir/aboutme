@@ -4,6 +4,8 @@ const User = require('../models/user');
 const UserFeedback = require('../models/userfeedbackIds')
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const UserFeedback = require('./models/UserFeedback'); // Adjust the path as necessary
+
 require('dotenv').config(); // Load environment variables
 
 // userfeedbackID
@@ -41,6 +43,18 @@ function generateUniqueId(length) {
   
     res.json({ uniqueId });
   })
+
+  router.post('/feedback', async (req, res) => {
+    const { uniqueId, feedback } = req.body;
+
+    try {
+        const newFeedback = new UserFeedback({ uniqueId, feedback });
+        await newFeedback.save();
+        res.status(201).json({ message: 'Feedback submitted successfully' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
 
 router.post('/generate-Id', async (req, res) => {
     // res.header("Access-Control-Allow-Origin", "http://localhost:3000");
