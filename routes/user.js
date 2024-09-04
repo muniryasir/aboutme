@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
-const UserFeedback = require('../models/userfeedback')
+const UserFeedback = require('../models/userfeedbackIds')
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 require('dotenv').config(); // Load environment variables
@@ -36,6 +36,8 @@ function generateUniqueId(length) {
     let {name, email, password} = {name: "test123", email:"test@test.com", password:"test123"}
     const user = new User({ name, email, password });
     await user.save();
+    const newFeedback = new UserFeedback({ feedbackId: uniqueId, userId });
+    await newFeedback.save();
   
     res.json({ uniqueId });
   })
@@ -80,7 +82,7 @@ router.post('/signup', async (req, res) => {
         await user.save();
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.status(201).json({ token });
+        res.status(201).json({ token, userId: user._id });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -102,7 +104,7 @@ router.post('/login', async (req, res) => {
         }
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ token });
+        res.status(201).json({ token, userId: user._id });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

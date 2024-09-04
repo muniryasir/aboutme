@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
-const userFeedbackSchema = new mongoose.Schema({
+const userFeedbackIdsSchema = new mongoose.Schema({
     feedbackId: { type: String, unique: true },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     // other fields...
   });
   
-  module.exports = mongoose.model('UserFeedback', userFeedbackSchema);
+  module.exports = mongoose.model('UserFeedbackIds', userFeedbackIdsSchema);
