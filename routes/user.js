@@ -4,7 +4,7 @@ const User = require('../models/user');
 const UserFeedbackIds = require('../models/userfeedbackIds')
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const UserFeedback = require('../models/UserFeedback'); // Adjust the path as necessary
+const UserFeedback = require('../models/userfeedback'); // Adjust the path as necessary
 
 require('dotenv').config(); // Load environment variables
 
