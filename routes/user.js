@@ -16,18 +16,18 @@ const createAIFeedback = async (userId,id) => {
       const userFeedbacks = await UserFeedback.find({ uniqueId: id });
       const feedbackTexts = userFeedbacks.map(fb => fb.feedback).join('\n');
   
-      const gptResponse = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
-        prompt: `Evaluate the provided feedbacks and generate an evaluation of an individual regarding which these feedbacks pertain to. Format the reply overviewing the following parameters: Professionalism, Personal Life, Area to improve.\n\nFeedbacks:\n${feedbackTexts}`,
-        max_tokens: 500,
-        temperature: 0.7,
-      }, {
-        headers: {
-          'Authorization': `${process.env.OPEN_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-      });
+    //   const gptResponse = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
+    //     prompt: `Evaluate the provided feedbacks and generate an evaluation of an individual regarding which these feedbacks pertain to. Format the reply overviewing the following parameters: Professionalism, Personal Life, Area to improve.\n\nFeedbacks:\n${feedbackTexts}`,
+    //     max_tokens: 500,
+    //     temperature: 0.7,
+    //   }, {
+    //     headers: {
+    //       'Authorization': `${process.env.OPEN_API_KEY}`,
+    //       'Content-Type': 'application/json',
+    //     },
+    //   });
   
-      const aiFeedbackText = gptResponse.data.choices[0].text.trim();
+    //   const aiFeedbackText = gptResponse.data.choices[0].text.trim();
 
     //   const aiFeedback = await AIFeedback.findOneAndUpdate(
     //     { uniqueId: userId },
