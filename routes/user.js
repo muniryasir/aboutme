@@ -24,15 +24,16 @@ router.get('/aifeedback/:id', async (req, res) => {
     const { id } = req.params;
 
     try {
-      const feedback = await AIFeedback.findOne({ uniqueId: id });
+      const userFeedbackId = await UserFeedbackIds.findOne({ feedbackId: id });
+      const aifeedback = await AIFeedback.findOne({ uniqueId: userFeedbackId.userId });
   
-      if (feedback) {
-        res.json({ feedback: feedback.feedback });
+      if (aifeedback) {
+        res.json({ feedback: aifeedback.feedback });
       } else {
         const userFeedbacks = await UserFeedback.find({ uniqueId: id });
   
         if (userFeedbacks.length >= 5) {
-          const userFeedbackId = await UserFeedbackIds.findOne({ feedbackId: id });
+        //   const userFeedbackId = await UserFeedbackIds.findOne({ feedbackId: id });
   
           if (userFeedbackId) {
             const createdFeedback = await createAIFeedback(userFeedbackId.userId);
@@ -46,7 +47,7 @@ router.get('/aifeedback/:id', async (req, res) => {
       }
     } catch (error) {
       console.error('Error fetching feedback:', error);
-      res.status(500).json({ message: 'Error fetching feedback.' });
+      res.status(500).json({ message: error });
     }
   });
  
