@@ -30,7 +30,7 @@ const createAIFeedback = async (userId,id) => {
 
       const aiFeedback = await AIFeedback.findOneAndUpdate(
         { uniqueId: userId },
-        { feedback: aiFeedbackText },
+        { feedback: "aiFeedbackText" },
         { new: true, upsert: true }
       );
       return aiFeedback;
@@ -57,9 +57,9 @@ router.get('/aifeedback/:id', async (req, res) => {
         //   const userFeedbackId = await UserFeedbackIds.findOne({ feedbackId: id });
   
           if (userFeedbackId) {
-            // const createdFeedback = await createAIFeedback(userFeedbackId.userId,id);
-            // res.json({ feedback: createdFeedback.feedback });
-            res.json({ feedback: 'this is test' });
+            const createdFeedback = await createAIFeedback(userFeedbackId.userId,id);
+            res.json({ feedback: createdFeedback.feedback });
+            // res.json({ feedback: 'this is test' });
           } else {
             res.json({ message: 'User ID not found.' });
           }
