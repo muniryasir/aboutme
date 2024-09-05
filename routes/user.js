@@ -29,12 +29,12 @@ const createAIFeedback = async (userId,id) => {
   
       const aiFeedbackText = gptResponse.data.choices[0].text.trim();
 
-      const aiFeedback = await AIFeedback.findOneAndUpdate(
-        { uniqueId: userId },
-        { feedback: "aiFeedbackText" },
-        { new: true, upsert: true }
-      );
-      return aiFeedback;
+    //   const aiFeedback = await AIFeedback.findOneAndUpdate(
+    //     { uniqueId: userId },
+    //     { feedback: "aiFeedbackText" },
+    //     { new: true, upsert: true }
+    //   );
+      return "aiFeedback";
     } catch (error) {
       console.error('Error creating AI feedback:', error);
       throw new Error('Failed to create AI feedback.');
@@ -59,7 +59,7 @@ router.get('/aifeedback/:id', async (req, res) => {
   
           if (userFeedbackId) {
             const createdFeedback = await createAIFeedback(userFeedbackId.userId,id);
-            res.json({ feedback: createdFeedback.feedback });
+            res.json({ feedback: "createdFeedback.feedback" });
             // res.json({ feedback: 'this is test' });
           } else {
             res.json({ message: 'User ID not found.' });
