@@ -31,7 +31,7 @@ const createAIFeedback = async (userId,id) => {
 
       const aiFeedback = await AIFeedback.findOneAndUpdate(
         { uniqueId: userId },
-        { feedback: aiFeedbackText },
+        { feedback: "aiFeedbackText" },
         { new: true, upsert: true }
       );
       return aiFeedback;
