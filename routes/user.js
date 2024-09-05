@@ -11,12 +11,31 @@ require('dotenv').config(); // Load environment variables
 
 // Function to create AI feedback
 const createAIFeedback = async (userId) => {
-    // Logic to create AI feedback
-    const aiFeedback = new AIFeedback({
-      uniqueId: userId,
-      feedback: 'Generated AI feedback',
-    });
-    await aiFeedback.save();
+    try {
+      const userFeedbacks = await UserFeedback.find({ uniqueId: userId });
+      const feedbackTexts = userFeedbacks.map(fb => fb.feedback).join('\n');
+  
+      const gptResponse = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
+        prompt: `Evaluate the provided feedbacks and generate an evaluation of an individual regarding which these feedbacks pertain to. Format the reply overviewing the following parameters: Professionalism, Personal Life, Area to improve.\n\nFeedbacks:\n${feedbackTexts}`,
+        max_tokens: 500,
+        temperature: 0.7,
+      }, {
+        headers: {
+          'Authorization': `${process.env.OPEN_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      const aiFeedback = new AIFeedback({
+        uniqueId: userId,
+        feedback: gptResponse.data.choices[0].text.trim(),
+      });
+      await aiFeedback.save();
+      return aiFeedback;
+    } catch (error) {
+      console.error('Error creating AI feedback:', error);
+      throw new Error('Failed to create AI feedback.');
+    }
   };
 
 // Endpoint to check if feedback exists
