@@ -5,8 +5,51 @@ const UserFeedbackIds = require('../models/userfeedbackIds')
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const UserFeedback = require('../models/userfeedback'); // Adjust the path as necessary
-
+const AIFeedback = require('../models/aifeedback')
 require('dotenv').config(); // Load environment variables
+
+
+// Function to create AI feedback
+const createAIFeedback = async (userId) => {
+    // Logic to create AI feedback
+    const aiFeedback = new AIFeedback({
+      uniqueId: userId,
+      feedback: 'Generated AI feedback',
+    });
+    await aiFeedback.save();
+  };
+
+// Endpoint to check if feedback exists
+router.get('/aifeedback/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      const feedback = await AIFeedback.findOne({ uniqueId: id });
+  
+      if (feedback) {
+        res.json({ feedback: feedback.feedback });
+      } else {
+        const userFeedbacks = await UserFeedback.find({ uniqueId: id });
+  
+        if (userFeedbacks.length >= 5) {
+          const userFeedbackId = await UserFeedbackIds.findOne({ feedbackId: id });
+  
+          if (userFeedbackId) {
+            const createdFeedback = await createAIFeedback(userFeedbackId.userId);
+            res.json({ feedback: createdFeedback.feedback });
+          } else {
+            res.json({ message: 'User ID not found.' });
+          }
+        } else {
+          res.json({ message: 'Feedback not available yet.' });
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching feedback:', error);
+      res.status(500).json({ message: 'Error fetching feedback.' });
+    }
+  });
+ 
 
 // userfeedbackID
 
