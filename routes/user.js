@@ -10,9 +10,9 @@ require('dotenv').config(); // Load environment variables
 
 
 // Function to create AI feedback
-const createAIFeedback = async (userId) => {
+const createAIFeedback = async (userId,id) => {
     try {
-      const userFeedbacks = await UserFeedback.find({ uniqueId: userId });
+      const userFeedbacks = await UserFeedback.find({ uniqueId: id });
       const feedbackTexts = userFeedbacks.map(fb => fb.feedback).join('\n');
   
       const gptResponse = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
@@ -55,7 +55,7 @@ router.get('/aifeedback/:id', async (req, res) => {
         //   const userFeedbackId = await UserFeedbackIds.findOne({ feedbackId: id });
   
           if (userFeedbackId) {
-            const createdFeedback = await createAIFeedback(userFeedbackId.userId);
+            const createdFeedback = await createAIFeedback(userFeedbackId.userId,id);
             res.json({ feedback: createdFeedback.feedback });
           } else {
             res.json({ message: 'User ID not found.' });
