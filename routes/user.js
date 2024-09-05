@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const UserFeedback = require('../models/userfeedback'); // Adjust the path as necessary
 const AIFeedback = require('../models/aifeedback')
+const axios = require('axios')
 require('dotenv').config(); // Load environment variables
 
 
@@ -30,7 +31,7 @@ const createAIFeedback = async (userId,id) => {
 
       const aiFeedback = await AIFeedback.findOneAndUpdate(
         { uniqueId: userId },
-        { feedback: "aiFeedbackText" },
+        { feedback: aiFeedbackText },
         { new: true, upsert: true }
       );
       return aiFeedback;
