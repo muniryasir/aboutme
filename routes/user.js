@@ -74,7 +74,7 @@ router.get('/aifeedback/:id', async (req, res) => {
   
           if (userFeedbackId) {
             const createdFeedback = await createAIFeedback(userFeedbackId.userId,id);
-            res.json({ feedback: "createdFeedback.feedback" });
+            res.json({ feedback: createdFeedback.feedback });
             // res.json({ feedback: 'this is test' });
           } else {
             res.json({ message: 'User ID not found.' });
