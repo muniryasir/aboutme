@@ -42,7 +42,7 @@ const createAIFeedback = async (userId,id) => {
         }
       })
   
-      const aiFeedbackText = response.data;
+      const aiFeedbackText = response.data.message.content;
 
       const aiFeedback = await AIFeedback.findOneAndUpdate(
         { uniqueId: userId },
