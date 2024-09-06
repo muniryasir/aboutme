@@ -16,25 +16,40 @@ const createAIFeedback = async (userId,id) => {
       const userFeedbacks = await UserFeedback.find({ uniqueId: id });
       const feedbackTexts = userFeedbacks.map(fb => fb.feedback).join('\n');
   
-      const gptResponse = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
-        prompt: `Evaluate the provided feedbacks and generate an evaluation of an individual regarding which these feedbacks pertain to. Format the reply overviewing the following parameters: Professionalism, Personal Life, Area to improve.\n\nFeedbacks:\n${feedbackTexts}`,
-        max_tokens: 500,
-        temperature: 0.7,
-      }, {
-        headers: {
-          'Authorization': `${process.env.OPEN_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-      });
-  
-      const aiFeedbackText = gptResponse.data.choices[0].text.trim();
+      const apiKey = process.env.OPEN_API_KEY;
+      const url = process.env.OPEN_API_URL;
 
-      const aiFeedback = await AIFeedback.findOneAndUpdate(
-        { uniqueId: userId },
-        { feedback: "aiFeedbackText" },
-        { new: true, upsert: true }
-      );
-      return "aiFeedback";
+      const data = {
+        model: 'gpt-4o-mini-2024-07-18',
+        messages: [
+          {
+            role: 'system',
+            content: 'Evaluate the provided feedbacks and generate an evaluation of an individual regarding which these feedbacks pertain to. Format the reply overviewing the following parameters: Professionalism, Personal Life, Area to improve.'
+          },
+          {
+            role: 'user',
+            content: 'Feedbacks:\n[Insert feedback texts here]'
+          }
+        ],
+        max_tokens: 500,
+        temperature: 0.7
+      };
+
+      const response = await axios.post(url, data, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        }
+      })
+  
+      const aiFeedbackText = response.data.choices[0].text.trim();
+
+      // const aiFeedback = await AIFeedback.findOneAndUpdate(
+      //   { uniqueId: userId },
+      //   { feedback: "aiFeedbackText" },
+      //   { new: true, upsert: true }
+      // );
+      return aiFeedbackText;
     } catch (error) {
       console.error('Error creating AI feedback:', error);
       throw new Error('Failed to create AI feedback.');
