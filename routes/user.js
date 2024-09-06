@@ -42,11 +42,11 @@ const createAIFeedback = async (userId,id) => {
         }
       })
   
-      const aiFeedbackText = response.data.choices[0].text.trim();
+      const aiFeedbackText = response.data;
 
       const aiFeedback = await AIFeedback.findOneAndUpdate(
         { uniqueId: userId },
-        { feedback: "aiFeedbackText" },
+        { feedback: aiFeedbackText },
         { new: true, upsert: true }
       );
       return aiFeedbackText;
