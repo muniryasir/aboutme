@@ -29,11 +29,11 @@ const createAIFeedback = async (userId,id) => {
   
       const aiFeedbackText = gptResponse.data.choices[0].text.trim();
 
-    //   const aiFeedback = await AIFeedback.findOneAndUpdate(
-    //     { uniqueId: userId },
-    //     { feedback: "aiFeedbackText" },
-    //     { new: true, upsert: true }
-    //   );
+      const aiFeedback = await AIFeedback.findOneAndUpdate(
+        { uniqueId: userId },
+        { feedback: "aiFeedbackText" },
+        { new: true, upsert: true }
+      );
       return "aiFeedback";
     } catch (error) {
       console.error('Error creating AI feedback:', error);
