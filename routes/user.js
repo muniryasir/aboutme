@@ -28,7 +28,7 @@ const createAIFeedback = async (userId,id) => {
           },
           {
             role: 'user',
-            content: 'Feedbacks:\n[Insert feedback texts here]'
+            content: `Feedbacks:\n[${feedbackTexts} ]`
           }
         ],
         max_tokens: 500,
