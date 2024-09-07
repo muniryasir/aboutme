@@ -126,17 +126,46 @@ function generateUniqueId(length) {
     res.json({ uniqueId });
   })
 
-  router.post('/feedback', async (req, res) => {
-    const { uniqueId, feedback } = req.body;
+//   router.post('/feedback', async (req, res) => {
+//     const { uniqueId, feedback } = req.body;
 
-    try {
-        const newFeedback = new UserFeedback({ uniqueId, feedback });
-        await newFeedback.save();
-        res.status(201).json({ message: 'Feedback submitted successfully' });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+//     try {
+//         const newFeedback = new UserFeedback({ uniqueId, feedback });
+//         await newFeedback.save();
+//         res.status(201).json({ message: 'Feedback submitted successfully' });
+//     } catch (err) {
+//         res.status(500).json({ message: err.message });
+//     }
+// });
+
+router.post('/feedback', async (req, res) => {
+  const { uniqueId, feedback } = req.body;
+
+  try {
+    const newFeedback = new UserFeedback({ uniqueId, feedback });
+    await newFeedback.save();
+
+    // Check if the number of feedbacks is greater than or equal to five
+    const userFeedbacks = await UserFeedback.find({ uniqueId });
+    if (userFeedbacks.length >= 5) {
+      const userFeedbackId = await UserFeedbackIds.findOne({ feedbackId: uniqueId });
+      if (userFeedbackId) {
+        const aiFeedbackText = await createAIFeedback(userFeedbackId.userId, uniqueId);
+        const updatedAIFeedback = await AIFeedback.findOneAndUpdate(
+          { uniqueId: userFeedbackId.userId },
+          { feedback: aiFeedbackText },
+          { new: true, upsert: true }
+        );
+        return res.status(201).json({ message: 'Feedback submitted successfully', aiFeedback: updatedAIFeedback.feedback });
+      }
     }
+
+    res.status(201).json({ message: 'Feedback submitted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
+
 
 router.post('/generate-Id', async (req, res) => {
   const { userId } = req.body;
