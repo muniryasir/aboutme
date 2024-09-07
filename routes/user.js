@@ -139,30 +139,60 @@ function generateUniqueId(length) {
 });
 
 router.post('/generate-Id', async (req, res) => {
-    // res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-    // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    const { userId } = req.body;
-  
-    if (!userId) {
-      return res.status(400).json({ error: 'User ID is required' });
+  const { userId } = req.body;
+
+  if (!userId) {
+    return res.status(400).json({ error: 'User ID is required' });
+  }
+
+  // Check if an entry already exists for the given userId
+  const existingEntry = await UserFeedbackIds.findOne({ userId });
+  if (existingEntry) {
+    return res.json({ uniqueId: existingEntry.feedbackId });
+  }
+
+  let uniqueId;
+  let isUnique = false;
+
+  while (!isUnique) {
+    uniqueId = generateUniqueId(8);
+    const existingFeedback = await UserFeedbackIds.findOne({ feedbackId: uniqueId });
+    if (!existingFeedback) {
+      isUnique = true;
     }
+  }
+
+  const newFeedback = new UserFeedbackIds({ feedbackId: uniqueId, userId });
+  await newFeedback.save();
+
+  res.json({ uniqueId });
+});
+
+// router.post('/generate-Id', async (req, res) => {
+//     // res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+//     // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     const { userId } = req.body;
   
-    let uniqueId;
-    let isUnique = false;
+//     if (!userId) {
+//       return res.status(400).json({ error: 'User ID is required' });
+//     }
   
-    while (!isUnique) {
-      uniqueId = generateUniqueId(8);
-      const existingFeedback = await UserFeedbackIds.findOne({ feedbackId: uniqueId });
-      if (!existingFeedback) {
-        isUnique = true;
-      }
-    }
+//     let uniqueId;
+//     let isUnique = false;
   
-    const newFeedback = new UserFeedbackIds({ feedbackId: uniqueId, userId });
-    await newFeedback.save();
+//     while (!isUnique) {
+//       uniqueId = generateUniqueId(8);
+//       const existingFeedback = await UserFeedbackIds.findOne({ feedbackId: uniqueId });
+//       if (!existingFeedback) {
+//         isUnique = true;
+//       }
+//     }
   
-    res.json({ uniqueId });
-  });
+//     const newFeedback = new UserFeedbackIds({ feedbackId: uniqueId, userId });
+//     await newFeedback.save();
+  
+//     res.json({ uniqueId });
+//   });
   
 // Sign-up route
 router.post('/signup', async (req, res) => {
